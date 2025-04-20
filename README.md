@@ -1,4 +1,4 @@
-# YT_DLIB - YouTube Downloader Library
+# YT_DLP - YouTube Downloader Library
 
 A Python library for downloading audio from YouTube videos using `yt-dlp`. This tool supports downloading from text files, lists of links, and CSV files.
 
