@@ -2,6 +2,8 @@
 
 A Python library for downloading audio from YouTube videos using `yt-dlp`. This tool supports downloading from text files, lists of links, and CSV files.
 
+colab link: https://colab.research.google.com/drive/1emOX6yWr0UPsGM-v2H8vE1eajEhKh6zr?usp=sharing
+
 ## Table of Contents
 1. [Installation](#installation)
 2. [Usage](#usage)
