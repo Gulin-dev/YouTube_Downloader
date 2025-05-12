@@ -5,17 +5,29 @@ import os
 import csv
 
 class YouTubeDownloader:
-    def __init__(self, save_folder=None):
+    def __init__(self, save_folder=None, download_type='audio'):
         self.save_folder = save_folder or self._create_save_folder()
-        self.ydl_opts = {
-            'format': 'bestaudio/best',
-            'outtmpl': f'{self.save_folder}/%(title)s.%(ext)s',
-            'postprocessors': [{
-                'key': 'FFmpegExtractAudio',
-                'preferredcodec': 'mp3',
-                'preferredquality': '192',
-            }],
-        }
+        self.download_type = download_type.lower()
+        self._setup_ydl_opts()
+        
+    def _setup_ydl_opts(self):
+        if self.download_type == 'audio':
+            self.ydl_opts = {
+                'format': 'bestaudio/best',
+                'outtmpl': f'{self.save_folder}/%(title)s.%(ext)s',
+                'postprocessors': [{
+                    'key': 'FFmpegExtractAudio',
+                    'preferredcodec': 'mp3',
+                    'preferredquality': '192',
+                }],
+            }
+        elif self.download_type == 'video':
+            self.ydl_opts = {
+                'format': 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best',
+                'outtmpl': f'{self.save_folder}/%(title)s.%(ext)s',
+            }
+        else:
+            raise ValueError("Неверный тип скачивания. Допустимые значения: 'audio' или 'video'")
 
     def _is_colab(self):
         try:
@@ -29,7 +41,7 @@ class YouTubeDownloader:
             folder_path = '/content/YouTube_Downloaded'
         else:
             folder_path = './YouTube_Downloaded'
-        
+
         os.makedirs(folder_path, exist_ok=True)
         return folder_path
 
@@ -69,8 +81,8 @@ class YouTubeDownloader:
 
     def _download(self, links):
         with yt_dlp.YoutubeDL(self.ydl_opts) as ydl:
-            for url in tqdm(links, desc="Downloading videos"):
+            for url in tqdm(links, desc=f"Downloading {self.download_type}"):
                 try:
                     ydl.download([url])
                 except Exception as e:
-                    print(f"Failed to download video from link {url}. Error: {e}")
+                    print(f"Failed to download {self.download_type} from link {url}. Error: {e}")
